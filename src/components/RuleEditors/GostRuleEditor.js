@@ -8,13 +8,19 @@ import { createForwardRule, editForwardRule } from "../../redux/actions/ports";
 
 const GostTemplates = [
   { label: "不使用模版", value: 0 },
-  { label: "直接端口转发（明文）", value: 7 },
-  { label: "tls 隧道客户端（入口）", value: 1 },
-  { label: "tls 隧道服务端（出口）", value: 4 },
-  { label: "ws 隧道客户端（入口）", value: 2 },
+  { label: "直接端口转发（明文）", value: 1 },
+  { label: "tls 隧道客户端（入口）", value: 2 },
+  { label: "tls 隧道服务端（出口）", value: 3 },
+  { label: "ws 隧道客户端（入口）", value: 4 },
   { label: "ws 隧道服务端（出口）", value: 5 },
-  { label: "wss 隧道客户端（入口）", value: 3 },
-  { label: "wss 隧道服务端（出口）", value: 6 },
+  { label: "wss 隧道客户端（入口）", value: 6 },
+  { label: "wss 隧道服务端（出口）", value: 7 },
+  { label: "kcp 隧道客户端（入口）", value: 8 },
+  { label: "kcp 隧道服务端（出口）", value: 9 },
+  { label: "quic 隧道客户端（入口）", value: 10 },
+  { label: "quic 隧道服务端（出口）", value: 11 },
+  { label: "ssh 隧道客户端（入口）", value: 12 },
+  { label: "ssh 隧道服务端（出口）", value: 13 },
 ];
 
 const GostRuleEditor = ({
@@ -68,42 +74,75 @@ const GostRuleEditor = ({
     switch (t) {
       case "1":
         setServeNodes([
-          `tcp://:${port.external_num ? port.external_num : port.num}`,
-          `udp://:${port.external_num ? port.external_num : port.num}`,
+          `tcp://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`,
+          `udp://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`,
         ]);
-        setChainNodes([`relay+tls://隧道服务端IP:服务端端口`]);
+        setChainNodes([]);
         break;
       case "2":
         setServeNodes([
           `tcp://:${port.external_num ? port.external_num : port.num}`,
           `udp://:${port.external_num ? port.external_num : port.num}`,
         ]);
-        setChainNodes([`relay+ws://隧道服务端IP:服务端端口`]);
+        setChainNodes([`relay+tls://隧道服务端IP:服务端端口`]);
         break;
       case "3":
+        setServeNodes([`relay+tls://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`]);
+        setChainNodes([]);
+        break;
+      case "4":
         setServeNodes([
           `tcp://:${port.external_num ? port.external_num : port.num}`,
           `udp://:${port.external_num ? port.external_num : port.num}`,
         ]);
-        setChainNodes([`relay+wss://隧道服务端IP:服务端端口`]);
-        break;
-      case "4":
-        setServeNodes([`relay+tls://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`]);
-        setChainNodes([]);
+        setChainNodes([`relay+ws://隧道服务端IP:服务端端口`]);
         break;
       case "5":
         setServeNodes([`relay+ws://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`]);
         setChainNodes([]);
         break;
       case "6":
+        setServeNodes([
+          `tcp://:${port.external_num ? port.external_num : port.num}`,
+          `udp://:${port.external_num ? port.external_num : port.num}`,
+        ]);
+        setChainNodes([`relay+wss://隧道服务端IP:服务端端口`]);
+        break;
+      case "7":
         setServeNodes([`relay+wss://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`]);
         setChainNodes([]);
         break;
-      case "7":
+      case "8":
         setServeNodes([
-          `tcp://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`,
-          `udp://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`,
+          `tcp://:${port.external_num ? port.external_num : port.num}`,
+          `udp://:${port.external_num ? port.external_num : port.num}`,
         ]);
+        setChainNodes([`relay+kcp://隧道服务端IP:服务端端口`]);
+        break;
+      case "9":
+        setServeNodes([`relay+kcp://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`]);
+        setChainNodes([]);
+        break;
+      case "10":
+        setServeNodes([
+          `tcp://:${port.external_num ? port.external_num : port.num}`,
+          `udp://:${port.external_num ? port.external_num : port.num}`,
+        ]);
+        setChainNodes([`relay+quic://隧道服务端IP:服务端端口`]);
+        break;
+      case "11":
+        setServeNodes([`relay+quic://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`]);
+        setChainNodes([]);
+        break;
+      case "12":
+        setServeNodes([
+          `tcp://:${port.external_num ? port.external_num : port.num}`,
+          `udp://:${port.external_num ? port.external_num : port.num}`,
+        ]);
+        setChainNodes([`relay+ssh://隧道服务端IP:服务端端口`]);
+        break;
+      case "13":
+        setServeNodes([`relay+ssh://:${port.external_num ? port.external_num : port.num}/落地IP:落地端口`]);
         setChainNodes([]);
         break;
       default:
